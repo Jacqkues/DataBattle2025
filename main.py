@@ -26,7 +26,7 @@ NUM_PAGE_TO_FETCH = 2
 
 category = ["Filing Requirements & Formalities", "Priority Claims & Right of Priority", "Divisional Applications", "Fees, Payment & Time Limits", "Languages & Translations","Procedural Remedies & Legal Effect","PCT Procedure & Entry into EP Phase","Examination, Amendments, and Grant","Opposition & Appeals","Substantive Patent Law","Entitlement & Transfers"]
 base_image_path = "/app/data/pdf-images"
-base_url = "/app/data/pdf-images"
+base_url = "/data/pdf-images"
 question_file = "/app/data/question-categories/categorie.json"
 
 
