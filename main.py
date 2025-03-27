@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from openai import OpenAI
 from qdrant_client import QdrantClient
-from services.genai import text_to_text, text_image_to_text , analyse_answer , generate_question
+from services.genai import text_to_text, text_image_to_text , analyse_answer , generate_question , rewrite_question
 from services.retrivial import Retrivial
 import gc
 from colpali_engine.models import ColQwen2_5, ColQwen2_5_Processor
@@ -321,17 +321,11 @@ async def search_pages(query:str):
 
 @app.post("/ask", response_class=HTMLResponse)
 async def ask_question(query: str = Form(...)):
+    rewrited_q = rewrite_question(app.groq_api,query)
+    print(rewrited_q)
+    
 
-    uery_filter = Filter(
-        must=[
-            FieldCondition(
-                key="pdf",
-                match=MatchAny(any=["1-EPC_17th_edition_2020_en", "2-PCT_wipo-pub-274-2024-en-patent-cooperation-treaty"])
-                )
-            ]
-    )
-
-    first_page = app.retrivial.fetch_doc_page(query,None)[0].points[0].payload
+    first_page = app.retrivial.fetch_doc_page(rewrited_q,None)[0].points[0].payload
 
     image_path  = os.path.join(base_image_path, first_page["pdf"], first_page["page"])
 
