@@ -321,11 +321,11 @@ async def search_pages(query:str):
 
 @app.post("/ask", response_class=HTMLResponse)
 async def ask_question(query: str = Form(...)):
-    rewrited_q = rewrite_question(app.groq_api,query)
-    print(rewrited_q)
+    #rewrited_q = rewrite_question(app.groq_api,query)
+    #print(rewrited_q)
     
 
-    first_page = app.retrivial.fetch_doc_page(rewrited_q,None)[0].points[0].payload
+    first_page = app.retrivial.fetch_doc_page(query,None)[0].points[0].payload
 
     image_path  = os.path.join(base_image_path, first_page["pdf"], first_page["page"])
 
