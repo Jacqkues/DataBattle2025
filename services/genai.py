@@ -181,3 +181,16 @@ def analyse_answer(client:OpenAI,question:str,user_answer:str,real_answer:str, c
         }
         return result
     return {"output" : result}
+
+def rewrite_question(client:OpenAI,question):
+    prompt ="""
+    You are an expert in law. The user need to fill relevant document to answer this question : 
+    QUESTION
+    From the user question make a  simple query to fetch document related document.  Only answer the query
+    """
+
+    prompt = prompt.replace("QUESTION",question)
+
+    result = text_to_text(client,prompt,"qwen-2.5-32b")
+
+    return result
