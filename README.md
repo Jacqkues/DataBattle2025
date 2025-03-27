@@ -26,7 +26,8 @@ docker build -t data-battle .
 puis vous pouvez la lancer 
 
 ```
-docker run -t data-battle
+docker run --name data-battle-container data-battle
+
 ```
 
 # Information
