@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Evaluators - ChatGPT Dark Mode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'chat-bg': '#212121',
+            'chat-panel': '#1e1e1e',
+            'chat-message': '#2a2a2a',
+            'chat-border': '#303030',
+            'chat-text': '#EDEDEF',
+            'chat-text-secondary': '#ACACBE',
+            'primary-accent': '#10b981'
+          },
+          spacing: {
+            'header-height': '4.5rem'
+          }
+        }
+      }
+    }
+  </script>
+   <style>
+    /* Logo styling */
+ .logo {
+   background: linear-gradient(135deg, #10b981, #3b82f6);
+   -webkit-background-clip: text;
+   background-clip: text;
+   color: transparent;
+   transition: all 0.3s ease;
+ }
+ 
+ .logo:hover {
+   text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+   transform: scale(1.02);
+ }
+ </style>
+</head>
+<body class="bg-chat-bg min-h-screen flex flex-col font-sans text-chat-text">
+
+ <!-- Header with Logo -->
+ <div class="absolute top-0 left-0 p-6 z-10">
+  <a href="/" class="inline-block">
+    <h1 class="text-3xl logo font-light">Vignemale</h1>
+  </a>
+</div>
+
+  <!-- Main Content -->
+  <main class="max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+    <!-- Heading + Button -->
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <h2 class="text-3xl font-bold">My Evaluators</h2>
+    </div>
+    <div class="mb-8">
+      <a href="/create_evaluator"
+      class="flex items-center gap-4 py-4 px-4 border border-dashed border-chat-border rounded-lg hover:bg-chat-message transition-colors cursor-pointer group">
+      <div class="flex-shrink-0">
+        <div class="w-10 h-10 bg-chat-message rounded-md flex items-center justify-center group-hover:bg-[#2f2f2f]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-chat-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+      </div>
+      <div class="flex-grow">
+        <h3 class="text-lg font-semibold text-chat-text-secondary group-hover:text-white">Create Evaluator</h3>
+        <p class="text-sm text-chat-text-secondary mt-1">Customize an evaluator for a specific purpose</p>
+      </div>
+    </a>
+    </div>
+    <!-- Evaluators List -->
+    <div class="space-y-4">
+      {% for evaluator in evaluators %}
+        <div onclick="window.location.href='/evaluator/{{ evaluator.id }}'"
+             class="flex items-center gap-4 py-4 cursor-pointer hover:bg-chat-message rounded-lg px-4 transition-colors">
+          <div class="flex-shrink-0">
+            <div class="border border-chat-border border-2 w-12 h-12 rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+          </div>
+          <div class="flex-grow">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-lg font-semibold group-hover:text-white">{{ evaluator.name }}</h3>
+                <p class="text-sm text-chat-text-secondary mt-1 max-w-xs truncate">{{ evaluator.description }}</p>
+              </div>
+              <!-- Action Buttons -->
+              
+              <div class="flex items-center gap-2">
+                <a href="/edit_evaluator/{{ evaluator.id }}"
+                   onclick="event.stopPropagation();"
+                   class="text-chat-text-secondary hover:text-white p-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </a>
+                <form action="/delete_evaluator/{{ evaluator.id }}" method="post"
+                      onsubmit="return confirm('Are you sure you want to delete this evaluator?');">
+                  <button type="submit"
+                          onclick="event.stopPropagation();"
+                          class="text-chat-text-secondary hover:text-red-500 p-1 ml-2 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+           
+
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  
+</body>
+</html>

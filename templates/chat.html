@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Evaluator Chat - ChatGPT Dark Mode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'chat-bg': '#212121',
+            'chat-panel': '#1e1e1e',
+            'chat-message': '#2a2a2a',
+            'chat-border': '#303030',
+            'chat-text': '#EDEDEF',
+            'chat-text-secondary': '#ACACBE',
+            'primary-accent': '#10b981'
+          },
+          spacing: {
+            'header-height': '4.5rem'
+          }
+        }
+      }
+    }
+  </script>
+
+<style>
+  /* Loading animation styles */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(33, 33, 33, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  
+  .loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(16, 185, 129, 0.2);
+    border-radius: 50%;
+    border-top-color: #10b981;
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .loading-text {
+    margin-top: 15px;
+    color: #EDEDEF;
+    font-size: 16px;
+  }
+
+  /* Logo styling */
+  .logo {
+    background: linear-gradient(135deg, #10b981, #3b82f6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .logo:hover {
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    transform: scale(1.02);
+  }
+
+</style>
+
+</head>
+<body class="bg-chat-bg flex justify-center w-full">
+
+  <!-- Header with Logo -->
+  <div class="absolute top-0 left-0 p-6 z-10">
+    <a href="/" class="inline-block">
+      <h1 class="text-3xl logo font-light">Vignemale</h1>
+    </a>
+  </div>
+
+<div class=" w-1/2 flex flex-col items-center justify-center h-screen">
+<h1 class="font-bold text-white text-3xl mb-16">Hello ! I'am {{evaluator.name}} let's study together today !</h1>
+
+<div class="mb-8 flex gap-4">
+    <a href='/generate/{{ evaluator.id }}' class="bg-white p-2 rounded-full text-sm font-bold">Generate Question</a>
+    <a href="/examen_question/{{ evaluator.id }}" class="p-2 text-sm font-bold text-white">Get One from real examen</a>
+</div>    
+
+
+
+</div>
+
+ <!-- Loading overlay -->
+ <div class="loading-overlay" id="loadingOverlay">
+  <div class="flex flex-col items-center">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading...</div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get all links
+    const links = document.querySelectorAll('a[href]');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    // Add click event listener to each link
+    links.forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (this.getAttribute('href') && this.getAttribute('href') !== '#' && this.getAttribute('href') !== '') {
+          loadingOverlay.classList.add('active');
+          
+          if (!this.getAttribute('href').startsWith(window.location.origin)) {
+            e.preventDefault();
+            setTimeout(() => {
+              window.location.href = this.getAttribute('href');
+            }, 500);
+          }
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

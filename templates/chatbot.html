@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Evaluator Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'chat-bg': '#212121',
+                        'chat-panel': '#1e1e1e',
+                        'chat-message': '#2a2a2a',
+                        'chat-border': '#303030',
+                        'chat-text': '#EDEDEF',
+                        'chat-text-secondary': '#ACACBE',
+                        'primary-accent': '#10b981'
+                    },
+                    spacing: {
+                        'header-height': '4.5rem'
+                    }
+                }
+            }
+        };
+
+        function clearResponse() {
+            document.getElementById('htmx-response').innerHTML = '';
+        }
+    </script>
+    <style>
+        /* Logo styling */
+        .logo {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            transform: scale(1.02);
+        }
+
+        /* Loader styling */
+        .htmx-indicator {
+            display: none;
+        }
+
+        .htmx-request .htmx-indicator {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="bg-chat-bg flex justify-center w-full">
+    <!-- Header with Logo -->
+    <div class="absolute top-0 left-0 p-6 z-10">
+        <a href="/" class="inline-block">
+            <h1 class="text-3xl logo font-light">Vignemale</h1>
+        </a>
+    </div>
+
+    <div class="absolute top-0 right-0 p-8 z-10">
+        <a href="/evaluator" class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot-icon lucide-bot"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            <h1 class="font-bold text-white">My Evaluator</h1>
+        </a>
+    </div>
+
+    <div class="w-1/2 flex flex-col items-center justify-center h-screen">
+        <div id="htmx-response" class="text-white mb-8 font-light backdrop-blur">
+            <h1 class="text-3xl font-bold">How can I help you today ?</h1>
+
+        </div>
+
+        <form id="myForm" class="w-full relative" hx-post="/ask" hx-target="#htmx-response" hx-indicator="#loader" hx-on::before-request="clearResponse()">
+            <input id="message" type="text" name="query" placeholder="Ask anything"
+                class="w-full px-4 py-3 bg-chat-message border border-chat-border rounded-2xl shadow-sm text-chat-text placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-accent transition">
+            </input>
+            <!-- Loader -->
+            <div id="loader" class="htmx-indicator absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg class="animate-spin h-5 w-5 text-primary-accent" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                        stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+            </div>
+            <button type="submit" style="display: none;"></button>
+        </form>
+        <p class="text-sm text-[#B4B4B4B4] font-light mt-4">Vignemale can make mistakes. Always check the sources.</p>
+    </div>
+</body>
+
+</html>

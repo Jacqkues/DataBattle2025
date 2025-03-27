@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Evaluator Chat - ChatGPT Dark Mode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'chat-bg': '#0f0f0f',
+            'chat-panel': '#1e1e1e',
+            'chat-message': '#2a2a2a',
+            'chat-border': '#303030',
+            'chat-text': '#EDEDEF',
+            'chat-text-secondary': '#ACACBE',
+            'primary-accent': '#10b981'
+          },
+          spacing: {
+            'header-height': '4.5rem'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-chat-bg min-h-screen flex flex-col text-chat-text font-sans">
+
+  <!-- Header -->
+  <header class="bg-chat-bg border-b border-chat-border p-4 sticky top-0 z-30 backdrop-blur-md bg-opacity-90 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+      <h1 class="text-2xl font-bold">ChatGPT Evaluator App</h1>
+      <button onclick="toggleDetails()" class="text-chat-text-secondary hover:text-white transition" aria-label="Show Evaluator Info">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M11.25 9V5.75a.75.75 0 011.5 0V9a.75.75 0 01-1.5 0zM11.25 14.25h1.5v3h-1.5v-3z" />
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 2.25c5.376 0 9.75 4.374 9.75 9.75S17.376 21.75 12 21.75 2.25 17.376 2.25 12 6.624 2.25 12 2.25z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Modal Info -->
+  <div id="evaluatorDetails" class="hidden fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center px-4">
+    <div class="bg-chat-panel rounded-xl shadow-lg p-6 w-full max-w-lg border border-chat-border">
+      <h2 class="text-2xl font-bold mb-3">{{ evaluator.name }}</h2>
+      <p class="text-chat-text-secondary mb-4">{{ evaluator.description }}</p>
+      <div class="space-y-2 mb-6 text-sm">
+        <div><span class="font-medium text-chat-text">Closed Questions: </span>{{ "Yes" if evaluator.closed_questions else "No" }}</div>
+        <div><span class="font-medium text-chat-text">Open Questions: </span>{{ "Yes" if evaluator.open_questions else "No" }}</div>
+      </div>
+      <div class="text-right">
+        <button onclick="toggleDetails()" class="bg-chat-message hover:bg-gray-700 text-white px-4 py-2 rounded-md transition shadow">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Chat -->
+  <main id="chatMessages" class="flex-grow p-4 space-y-4 overflow-y-auto max-w-3xl w-full mx-auto">
+    <!-- Messages dynamically inserted -->
+  </main>
+
+  <!-- Answer input area -->
+  <div id="answerArea" class="p-4 hidden flex flex-col items-center max-w-3xl w-full mx-auto space-y-4"></div>
+
+  <!-- Footer Controls -->
+  <footer class="border-t border-chat-border p-6 flex flex-col items-center bg-chat-bg">
+    <div id="controlButtons">
+      <button id="startButton" class="bg-primary-accent hover:bg-emerald-600 text-white px-6 py-3 rounded-md shadow transition font-medium">
+        🚀 Démarrer
+      </button>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    let currentQuestion = null;
+
+    function appendMessage(message, sender) {
+      const chatMessages = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `p-4 rounded-lg max-w-xl shadow transition-all duration-300 ${
+        sender === 'bot' ? 'self-start bg-chat-panel text-chat-text border border-chat-border' : 'self-end bg-chat-message text-chat-text'
+      }`;
+      messageDiv.textContent = message;
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function startChat() {
+      document.getElementById('controlButtons').innerHTML = '';
+      const res = await fetch('/get_question');
+      const data = await res.json();
+      currentQuestion = data;
+      appendMessage(data.question, "bot");
+      showAnswerInput(data);
+    }
+
+    function showAnswerInput(question) {
+      const area = document.getElementById('answerArea');
+      area.innerHTML = '';
+      area.classList.remove('hidden');
+
+      const answerInput = document.createElement('input');
+      answerInput.type = 'hidden';
+      answerInput.id = 'userAnswer';
+      area.appendChild(answerInput);
+
+      if (question.type === 'open') {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Tapez votre réponse...';
+        input.className = 'w-full bg-chat-panel text-chat-text border border-chat-border rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-accent';
+        input.oninput = () => answerInput.value = input.value;
+        area.appendChild(input);
+      } else {
+        const btns = document.createElement('div');
+        btns.className = 'flex gap-4';
+        ['Yes', 'No'].forEach(value => {
+          const btn = document.createElement('button');
+          btn.textContent = value;
+          btn.className = 'px-5 py-2 bg-chat-message text-white rounded-md hover:bg-gray-700 transition';
+          btn.onclick = () => {
+            answerInput.value = value;
+            display.textContent = 'Réponse sélectionnée: ' + value;
+          };
+          btns.appendChild(btn);
+        });
+        area.appendChild(btns);
+
+        const display = document.createElement('p');
+        display.id = 'selectedAnswer';
+        display.className = 'text-chat-text-secondary text-sm';
+        area.appendChild(display);
+      }
+
+      const btn = document.createElement('button');
+      btn.textContent = "✅ J'ai fini";
+      btn.className = 'bg-primary-accent hover:bg-emerald-600 text-white px-6 py-2 rounded-md shadow transition mt-4';
+      btn.onclick = submitAnswer;
+      area.appendChild(btn);
+    }
+
+    async function submitAnswer() {
+      const answer = document.getElementById('userAnswer').value;
+      if (!answer) return alert("Veuillez fournir une réponse.");
+      appendMessage(answer, "user");
+      document.getElementById('answerArea').classList.add('hidden');
+
+      const res = await fetch('/submit_answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question_id: currentQuestion.id, answer: answer })
+      });
+
+      const data = await res.json();
+      appendMessage(data.correction, "bot");
+
+      const control = document.getElementById('controlButtons');
+      control.innerHTML = '';
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = "🔁 Nouvelle question";
+      nextBtn.className = 'mt-4 bg-primary-accent hover:bg-emerald-600 text-white px-6 py-3 rounded-md shadow transition font-medium';
+      nextBtn.onclick = () => {
+        document.getElementById('chatMessages').innerHTML = '';
+        control.innerHTML = '';
+        startChat();
+      };
+      control.appendChild(nextBtn);
+    }
+
+    function toggleDetails() {
+      document.getElementById('evaluatorDetails').classList.toggle('hidden');
+    }
+
+    document.getElementById('startButton').onclick = startChat;
+  </script>
+</body>
+</html>

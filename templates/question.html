@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Evaluator Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'chat-bg': '#212121',
+            'chat-panel': '#1e1e1e',
+            'chat-message': '#2a2a2a',
+            'chat-border': '#303030',
+            'chat-text': '#EDEDEF',
+            'chat-text-secondary': '#ACACBE',
+            'primary-accent': '#10b981'
+          },
+          spacing: {
+            'header-height': '4.5rem'
+          }
+        }
+      }
+    }
+  </script>
+   <style>
+    /* Logo styling */
+ .logo {
+   background: linear-gradient(135deg, #10b981, #3b82f6);
+   -webkit-background-clip: text;
+   background-clip: text;
+   color: transparent;
+   transition: all 0.3s ease;
+ }
+ 
+ .logo:hover {
+   text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+   transform: scale(1.02);
+ }
+ </style>
+</head>
+<body class="system bg-chat-bg flex justify-center w-full">
+   <!-- Header with Logo -->
+   <div class="absolute top-0 left-0 p-6 z-10">
+    <a href="/" class="inline-block">
+      <h1 class="text-3xl logo font-light">Vignemale</h1>
+    </a>
+  </div>
+
+<div class=" w-1/2 flex flex-col items-center justify-center h-screen">
+
+
+<form id="myForm" action="/analyse_answer/{{evaluator}}" method="POST">
+<div class=" w-full mb-32">
+    {% for line in question.split('\n') %}
+        <p class="text-white mb-2">{{ line }}</p>
+    {% endfor %}
+
+
+    
+</div>
+
+<input type="hidden" name="real_answer"  value='{{answer}}'>
+<input type="hidden" name="legal_doc" value='{{legal_basis}}'>
+<input type="hidden" name="question" value='{{question}}'>
+<input type="hidden" name="image_url" value='{{image_url}}'>
+
+<textarea id="message" name="user_answer" class="w-full px-4 py-3 bg-chat-message border border-chat-border rounded-2xl shadow-md text-chat-text placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-accent transition"    placeholder="Enter your answer" type="text"rows={1} value={input} ></textarea>
+</form>
+
+</div>
+
+</body>
+</html>
+<script>
+    document.getElementById("message").addEventListener("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) { 
+            event.preventDefault();  // Prevent new line
+            document.getElementById("myForm").submit();  // Submit the form
+        }
+    });
+</script>

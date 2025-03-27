@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Vignemale</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'chat-bg': '#212121',
+            'chat-panel': '#1e1e1e',
+            'chat-message': '#2a2a2a',
+            'chat-border': '#3a3a3a',
+            'chat-text': '#EDEDEF',
+            'chat-text-secondary': '#ACACBE',
+            'primary-accent': '#10b981'
+          },
+          spacing: {
+            'header-height': '4.5rem'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Logo styling */
+    .logo {
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+
+<body class="bg-chat-bg min-h-screen flex flex-col text-chat-text font-sans">
+
+  <!-- Header with Logo -->
+  <div class="absolute top-0 left-0 p-6 z-10">
+    <a href="/" class="inline-block">
+      <h1 class="text-3xl logo font-light">Vignemale</h1>
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow">
+    <!-- Heading -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold">Edit evaluator</h2>
+      <p class="text-chat-text-secondary mt-2">Update your evaluator</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-chat-panel shadow-lg rounded-xl p-8 border border-chat-border">
+      <form action="/update_evaluator/{{ evaluator.id }}" method="post" class="space-y-6">
+        <!-- Name -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-chat-text mb-1">Name</label>
+          <input type="text" id="name" name="name" required value="{{ evaluator.name }}"
+            class="w-full px-4 py-3 bg-chat-message border border-chat-border rounded-md text-chat-text placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-accent transition" />
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-chat-text mb-1">Description</label>
+          <textarea id="description" name="description" rows="4" required
+            class="w-full px-4 py-3 bg-chat-message border border-chat-border rounded-md text-chat-text placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-accent transition">{{ evaluator.description }}</textarea>
+        </div>
+
+        <!-- Type de questions -->
+        <fieldset class="space-y-3">
+          <legend class="text-sm font-medium text-chat-text mb-2">Questions Type</legend>
+          <div class="flex items-center gap-2 mb-4">
+            <input type="checkbox" id="closed_questions" name="closed_questions" value="true" {% if
+              evaluator.closed_questions %}checked{% endif %}
+              class="h-4 w-4 text-primary-accent bg-chat-message border-chat-border rounded focus:ring-primary-accent">
+            <label for="closed_questions" class="text-sm text-chat-text">MCQ Question</label>
+          </div>
+          <div class="mt-4">
+            <label for="sources" class="mt-4">Sources</label>
+            <div class="flex flex-col gap-1">
+              {% for source in sources %}
+              <a class="text-sm text-white font-light mt-2" href="{{sources[source]}}">{{source}}</a>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div>
+            <a href="/add_data"
+              class="flex items-center gap-4 py-4 px-4 border border-dashed border-chat-border rounded-lg hover:bg-chat-message transition-colors cursor-pointer group">
+              <div class="flex-shrink-0">
+                <div
+                  class="w-10 h-10 bg-chat-message rounded-md flex items-center justify-center group-hover:bg-[#2f2f2f]">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-chat-text-secondary" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-grow">
+                <h3 class="text-lg font-semibold text-chat-text-secondary group-hover:text-white">Add Data</h3>
+                <p class="text-sm text-chat-text-secondary mt-1">Add any kind of documents : pdf , Markdown , word ...</p>
+              </div>
+            </a>
+          </div>
+
+          <!-- Submit -->
+          <div class="flex justify-end pt-4">
+            <button type="submit"
+              class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-primary-accent hover:bg-emerald-600 text-white font-medium rounded-md shadow transition duration-200">
+              💾 Sauvegarder
+            </button>
+          </div>
+      </form>
+    </div>
+  </main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Evaluator Chat - ChatGPT Dark Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'chat-bg': '#212121',
+                        'chat-panel': '#1e1e1e',
+                        'chat-message': '#2a2a2a',
+                        'chat-border': '#303030',
+                        'chat-text': '#EDEDEF',
+                        'chat-text-secondary': '#ACACBE',
+                        'primary-accent': '#10b981'
+                    },
+                    spacing: {
+                        'header-height': '4.5rem'
+                    }
+                }
+            },
+            
+            
+        }
+    </script>
+     <style>
+        /* Logo styling */
+     .logo {
+       background: linear-gradient(135deg, #10b981, #3b82f6);
+       -webkit-background-clip: text;
+       background-clip: text;
+       color: transparent;
+       transition: all 0.3s ease;
+     }
+     
+     .logo:hover {
+       text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+       transform: scale(1.02);
+     }
+     </style>
+</head>
+
+<body class="bg-chat-bg flex">
+
+     <!-- Header with Logo -->
+  <div class="absolute top-0 left-0 p-6 z-10">
+    <a href="/" class="inline-block">
+      <h1 class="text-3xl logo">Vignemale</h1>
+    </a>
+  </div>
+    <div class="w-[55%]  p-16 mt-8 mr-8">
+        <h1 class="font-bold text-3xl text-white">
+            Question
+        </h1>
+
+        <p class="text-sm text-white font-light mt-6">
+
+            {% for line in question.split('\n') %}
+        <p class="text-sm text-white font-light  mb-1">{{ line }}</p>
+        {% endfor %}
+        </p>
+
+        <h2 class="mt-6 text-white font-bold text-xl">
+            Your answer
+        </h2>
+
+        <p class="text-sm text-white font-light mt-6">
+            {{user_answer}}
+        </p>
+
+        <h2 class="mt-6 text-white font-bold text-xl">
+            Feedback
+        </h2>
+
+        <div class="prose text-white text-sm font-light mt-6">
+            {{ feedback | safe }}
+        </div>
+
+        <h2 class="mt-6 text-white font-bold text-xl">
+            Score
+        </h2>
+
+        <p class="text-sm text-white font-light mt-2">
+            {{score}}
+        </p>
+
+        <h2 class="mt-6 text-white font-bold text-xl">
+            Sources
+        </h2>
+
+        <a href='{{image_url}}' class="text-sm text-white font-light mt-2">
+            {{image_name}}
+        </a>
+        <div class="mb-8 mt-8 flex gap-4">
+            <a href='/generate/{{ evaluator }}' class="bg-white p-2 rounded-full text-sm font-bold">Generate New Question</a>
+            <a href="/examen_question/{{ evaluator}}" class="p-2 text-sm font-bold text-white">Get One from real examen</a>
+        </div>  
+
+    </div>
+    <div class="w-[45%]">
+
+    </div>
+</body>
+
+</html>

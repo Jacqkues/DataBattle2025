@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vignemale</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+   tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'chat-bg': '#212121',
+            'chat-panel': '#1e1e1e',
+            'chat-message': '#2a2a2a',
+            'chat-border': '#303030',
+            'chat-text': '#EDEDEF',
+            'chat-text-secondary': '#ACACBE',
+            'primary-accent': '#10b981'
+          },
+          spacing: {
+            'header-height': '4.5rem'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+     /* Logo styling */
+  .logo {
+    background: linear-gradient(135deg, #10b981, #3b82f6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .logo:hover {
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    transform: scale(1.02);
+  }
+  </style>
+</head>
+<body class="bg-chat-bg min-h-screen flex flex-col text-chat-text font-sans">
+   <!-- Header with Logo -->
+   <div class="absolute top-0 left-0 p-6 z-10">
+    <a href="/" class="inline-block">
+      <h1 class="text-3xl logo font-light">Vignemale</h1>
+    </a>
+  </div>
+
+ 
+
+  <!-- Main Content -->
+  <main class="max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow">
+    <!-- Heading -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold">Create new evaluator</h2>
+      <p class="text-chat-text-secondary mt-2">Fill this form to create a new evaluator</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-chat-panel shadow-lg rounded-xl p-8 border border-chat-border">
+      <form action="/create_evaluator" method="post" class="space-y-6">
+        <!-- Name -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-chat-text mb-1">Evaluator Name</label>
+          <input type="text" id="name" name="name" required
+            class="w-full px-4 py-3 bg-chat-message border border-chat-border rounded-md text-chat-text placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-accent transition" />
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-chat-text mb-1">Categories</label>
+          <select id="description" name="description" required
+            class="w-full px-6 py-3 bg-chat-message border border-chat-border rounded-md text-chat-text focus:outline-none focus:ring-2 focus:ring-primary-accent transition">
+            <option value="" disabled selected>Select a category</option>
+            {% for category in categorys %}
+              <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label for="criteria" class="block text-sm font-medium text-chat-text mb-1">Criteria</label>
+          <textarea id="criteria" name="criteria" rows="2" required
+            class="w-full px-4 py-3 bg-chat-message border border-chat-border rounded-md text-chat-text placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-accent transition"
+            
+            >if it's a multiple choice question the user need to specify the exact answer letter no justification is required. Else the user need to make reference to the right legal basis and show a good understanding of it in order to have a good grade.</textarea>
+        </div>
+
+        <div>
+          <label for="scoring" class="block text-sm font-medium text-chat-text mb-1">Scoring</label>
+          <textarea id="scoring" name="scoring" rows="2" required
+            class="w-full px-4 py-3 bg-chat-message border border-chat-border rounded-md text-chat-text placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-accent transition">if it's a multiple choice question the score is : 0 if wrong and 1 if right.
+            Else it's a grade between 0 and 10.</textarea>
+        </div>
+
+        <!-- Type de questions -->
+        <fieldset class="space-y-3">
+          <legend class="text-sm font-medium text-chat-text mb-2">Questions type :</legend>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="closed_questions" name="closed_questions" value="true" checked="true"
+              class="h-4 w-4 text-primary-accent bg-chat-message border-chat-border rounded focus:ring-primary-accent">
+            <label for="closed_questions" class="text-sm text-chat-text">MCQ Questions</label>
+          </div>
+        
+        </fieldset>
+
+        <!-- Submit -->
+        <div class="flex justify-end pt-4">
+          <button type="submit"
+            class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-primary-accent hover:bg-emerald-600 text-white font-medium rounded-md shadow transition duration-200">
+            ✅ Create evaluator
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

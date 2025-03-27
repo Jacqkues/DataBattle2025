@@ -1,0 +1,24 @@
+[project]
+name = "pi-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "colpali-engine",
+    "fastapi[standard]>=0.115.11",
+    "fastembed>=0.6.0",
+    "groq>=0.20.0",
+    "litellm>=1.64.1",
+    "markdown>=3.7",
+    "openai>=1.68.0",
+    "pdf2image>=1.17.0",
+    "qdrant-client>=1.13.3",
+    "smolagents>=1.12.0",
+    "sqlalchemy>=2.0.39",
+    "stamina>=25.1.0",
+    "uvicorn>=0.34.0",
+]
+
+[tool.uv.sources]
+colpali-engine = { git = "https://github.com/illuin-tech/colpali" }
