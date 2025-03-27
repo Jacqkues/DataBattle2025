@@ -13,8 +13,8 @@ from PIL import Image
 
 
 qdrant_client = QdrantClient(
-    url="https://d1faa86f-45a0-49bc-8080-4e5b6ea1703a.eu-west-1-0.aws.cloud.qdrant.io",
-    api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.cSE45xYWHgS9q_rbwf3186l925E7OovQEgBz6s7x_uc",
+    url=os.getenv("DATABASE_URL"),
+    api_key=os.getenv("DATABASE_KEY"),
 )
 
 colqwen_model = ColQwen2_5.from_pretrained(
